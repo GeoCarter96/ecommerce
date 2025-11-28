@@ -2,13 +2,13 @@ function renderBooks() {
 const booksWrapper = document.querySelector('.books')
 const books = getBooks();
 
-if (filter === 'LOW_TO_HIGH') {
- books.sort((a, b) => a.originalPrice - b.originalPrice);
+if (filter === "LOW_TO_HIGH") {
+ books.sort((a, b) => (a.salePrice || a.originalPrice) - (b.salePrice || b.originalPrice));
 }
-else if (filter === 'HIGH_TO_LOW') {
-    books.sort((a, b) => b.originalPrice - a.originalPrice);
+else if (filter === "HIGH_TO_LOW") {
+    books.sort((a, b) => (b.salePrice || b.originalPrice) - (a.salePrice || a.originalPrice));
 }
-else if (filter === 'RATING') {
+else if (filter === "RATING") {
     books.sort((a, b) => b.rating - a.rating);
 }
 
@@ -29,12 +29,24 @@ ${ratingsHtml(book.rating)}
 
 </div>
 <div class="book__price">
-<span $${book.originalPrice.toFixed(2)}</span>
+
+${priceHtml(book.originalPrice, book.salePrice)}
 </div>
 </div>`;
 }).join("");
 
 booksWrapper.innerHTML = booksHtml;
+
+}
+
+function priceHtml(originalPrice, salePrice) {
+    if (!salePrice) {
+        return `$${originalPrice.toFixed(2)}`
+    }
+    else   {
+return `<span class="book__price--normal">$${originalPrice.toFixed(2)}</span> $${salePrice.toFixed(2)}`
+    }
+
 
 }
 
@@ -113,7 +125,7 @@ function getBooks() {
       title: "Cashflow Quadrant",
       url: "assets/book-4.jpeg",
       originalPrice: 11.95,
-      salePrice: 10.99,
+      salePrice: null,
       rating: 4,
     },
     {
@@ -121,7 +133,7 @@ function getBooks() {
       title: "48 Laws of Power",
       url: "assets/book-5.jpeg",
       originalPrice: 38.95,
-      salePrice: 17.95,
+      salePrice: null,
       rating: 4.5,
     },
     {
@@ -147,6 +159,6 @@ function getBooks() {
       originalPrice: 30.95,
       salePrice: 20.99,
       rating: 4.5,
-    }
+    },
   ];
 }
